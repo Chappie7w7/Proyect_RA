@@ -296,22 +296,27 @@ simple-framed-green-gradient.svg" alt="spoonacular logo"><br>
                     let self = this;
                     var xmlHttp = new XMLHttpRequest();
                     xmlHttp.onreadystatechange = function () {
-                        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                            self.successCallback(JSON.parse(xmlHttp.responseText));
+                        if (xmlHttp.readyState == 4) {
+                            if (xmlHttp.status == 200) {
+                                try {
+                                    self.successCallback(JSON.parse(xmlHttp.responseText));
+                                } catch (e) {
+                                    console.error('JSON parse error:', e);
+                                }
+                            } else {
+                                console.error('API error:', xmlHttp.status, xmlHttp.responseText);
+                            }
                         }
-                    }
-                    var url = this.uploadUrl + '?imageUrl=' +
+                    };
 
-                        encodeURIComponent(this.demoImageUrl);
+                    var url = self.uploadUrl + '?imageUrl=' + encodeURIComponent(self.demoImageUrl);
 
                     xmlHttp.open("GET", url, true);
-
-                    xmlHttp.setRequestHeader('x-rapidapi-host', this.uploadHeaders['x-rapidapi - host']);
-
-                    xmlHttp.setRequestHeader('x-rapidapi-key', this.uploadHeaders['x-rapidapi - key']);
-
+                    xmlHttp.setRequestHeader('X-RapidAPI-Host', self.uploadHeaders['X-RapidAPI-Host']);
+                    xmlHttp.setRequestHeader('X-RapidAPI-Key', self.uploadHeaders['X-RapidAPI-Key']);
                     xmlHttp.send(null);
                 }
+
             },
             components: {
                 vuefileagent: VueFileAgent.VueFileAgent
